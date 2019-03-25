@@ -5,7 +5,7 @@
 ## Table of Contents
 
 * [Instructions](#instructions)
-* [Dependencies](#functions used in the game)
+* [Dependencies](#Dependencies)
 
 ## Instructions
 
