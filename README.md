@@ -12,8 +12,11 @@
 This game consists of 3 main local files plus some prefetched files provided by Udacity. 
 
 index.html: It contains the html for the game.
+
 app.js: It contains the Javascript code and all of the game functionallity. 
+
 app.css: It contains some CSS classes used in the game.
+
 
 In order to run the game, the index.html file must be opened. 
 
