@@ -59,6 +59,12 @@ Adds functionallity to the 'Restart' button.
 #shuffle():
 Reorders a list in a randomly fashion.
 
+#timer():
+A timer for tracking the time that it takes to the player to finish the game. 
+
+#showTotalTime():
+A simple fuction for displaying a modal with the returned value of the timer() function.
+
 
 ## License
 
