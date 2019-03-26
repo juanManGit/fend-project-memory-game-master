@@ -70,7 +70,6 @@ function cardClicked () {
                 selectedParentCard = this.classList;
                 //The selected cards are put in a temporary variable.
                 openCards.push(this);
-                console.log(openCards.length);
                 if (openCards.length == 2) { //checks if the card has reached the maximum number of clicks per play and if true, calls pairCards to check for winning/losing conditions
                     pairCards();  
                 }                 
@@ -80,8 +79,8 @@ function cardClicked () {
 //Checks for winning/losing conditions
 function pairCards () {
     
-    if (openCards[0].firstElementChild.classList.value ===                                          openCards[1].firstElementChild.classList.value) { //if both open cards have the same class executes the code for matching cards. It also resets the open cards variable and calls "checkForWin" function
-        console.log("ITS A MATCH!");  
+    if (openCards[0].firstElementChild.classList.value === openCards[1].firstElementChild.classList.value) { //if both open cards have the same class executes the code for matching cards. It also resets the open cards variable and calls "checkForWin" function
+
         document.getElementsByClassName("moves")[0].innerText = remainingMoves;
         openCards[0].removeEventListener('click', cardClicked);
         openCards[1].removeEventListener('click', cardClicked);
