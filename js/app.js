@@ -1,5 +1,5 @@
 
-//Global Variables
+//Global Variables. These are accessed across multiple functions. 
 var selectedCard = undefined;
 var selectedParentCard = undefined;
 var clicked = false;
@@ -8,9 +8,19 @@ var remainingMoves = 3;
 var clickCount = 0;
 var attempts = document.getElementsByClassName("stars");
 var successfulMatches = 0;
+var won = false;
+var lost = false;
+var reset = false;
+var totalTime = "";
 
-//Main function. It starts the game
+//Sets a variable name for the modal
+var banner = document.getElementById('banner');
+//Sets a variable name for text content inside the modal
+var bannerText = document.getElementById('bannerText');
+
+//Main function. It sets the initial values. Creates a random list with all the symbols and add event listeners to them. Then it adds them to the DOM. This function initializes the game. 
 function startGame () {
+    //Initial list with all the card symbols.
    let cardSymbol = [
             "fa-diamond",
             "fa-diamond", 
@@ -41,11 +51,14 @@ function startGame () {
         currentCard[i].classList.add("fa"); //assigns the same class to all the cards in the deck
 
         }; 
+    //Starts the timer 
+    timer();
+    
 } 
 
 //Handles the numbers of clicks allowed per play.
 function cardClicked () {
-            
+            //It resets the click count after the second click.
             if (clickCount >= 2){
                     clickCount = 0
                     return}
@@ -55,15 +68,13 @@ function cardClicked () {
                 this.classList.add("open");
                 selectedCard = this.firstElementChild.classList;
                 selectedParentCard = this.classList;
+                //The selected cards are put in a temporary variable.
                 openCards.push(this);
                 console.log(openCards.length);
                 if (openCards.length == 2) { //checks if the card has reached the maximum number of clicks per play and if true, calls pairCards to check for winning/losing conditions
                     pairCards();  
                 }                 
             }
-    
-      
-    
 }
 
 //Checks for winning/losing conditions
@@ -107,9 +118,11 @@ function checkForWin () {
             let cardState = [];
             if (successfulMatches == 8){
                 document.getElementById("displayText").innerHTML = "Congratulations! You've won!. Click on the restart button to start a new game";
-                removeListeners();            
+                removeListeners();
+                won=true;
+                
             }
-            else {return;}
+            else {return}
 
 }
 
@@ -117,6 +130,9 @@ function checkForWin () {
 function endGame () {
                 removeListeners();
                 document.getElementById("displayText").innerHTML = "You've ran out of moves! Click on the restart button to start a new game";
+                lost=true;
+                
+                
                 
 } 
     
@@ -135,9 +151,12 @@ function restartGame () {
             attempts[0].children[2].children[0].classList.add("fa-star");
             successfulMatches = 0;
             document.getElementById("displayText").innerHTML = "";
-            document.getElementsByClassName("moves")[0].innerText = remainingMoves;            
-            resetGrid();
+            document.getElementsByClassName("moves")[0].innerText = remainingMoves; 
+            reset = true;
+            banner.style.display = "none";
+            resetGrid();            
             startGame();
+            timer();
 }
 
 //Removes all event listeners from cards at once.
@@ -166,6 +185,7 @@ function restartButton (){
         let resetButton = document.getElementsByClassName("restart");
         resetButton[0].addEventListener('click', restartGame);
         startGame();
+        
     
 }
 
@@ -182,6 +202,61 @@ function shuffle(array) {
     }
 
     return array;
+}
+
+//It adds a timer to the game
+function timer(){
+    let minuteCount = 00;
+    let secondCount = 00;
+    let time = setInterval(function(){ 
+        //these get the span html elements where the timer is updated.
+        document.getElementById("timerSeconds").innerHTML = secondCount;
+        document.getElementById("timerMinutes").innerHTML = minuteCount;
+        //This counter adds 1 to the secondCount variable each second.
+        secondCount++;
+        
+        //if the second count reaches 59 it adds 1 to the minute counter and resets the seconds counter back to 0.
+        if (secondCount === 59) {
+            minuteCount++;
+            secondCount=0;            
+        }        
+        
+        //if the variable won is true, it stops the timer and modifies the totalTime variable and adds a message for the player with the total time it took them to finish the game by calling theshowTotalTime function. Next, it resets the won variable back for the next game.
+        if (won){
+            clearTimeout(time);
+            console.log("clear timeout successful");
+            totalTime = "You've won! It took you " + minuteCount + " minutes and " + (secondCount - 1) + " seconds to finish this game!";
+            showTotalTime();
+            won = false;
+            
+        }
+        
+        //Same fuctionallity as the IF statement above but for the losing condition.
+        if (lost){
+            clearTimeout(time);
+            totalTime = "You've lost! It took you " + minuteCount + " minutes and " + (secondCount - 1) + " seconds to finish this game!";    
+            showTotalTime();
+            lost = false;
+
+        }
+        
+        //If the Restart button is clicked, it stops the timer and resets the all timer variables to get them ready for the next game.
+        if (reset){
+            clearTimeout(time);
+            minuteCount = 00;
+            secondCount = 00;
+            totalTime = "";
+            reset = false;
+ 
+        }
+    }, 1000);
+ 
+}
+
+//Adds a modal to the screen showing the total amount of time that took the player to finish the current game.
+function showTotalTime(){
+    banner.style.display = "block";
+    bannerText.textContent = totalTime;
 }
 
 
